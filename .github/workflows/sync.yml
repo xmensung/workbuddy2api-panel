@@ -1,0 +1,31 @@
+name: 'Upstream Sync'
+
+on:
+  schedule:
+    # UTC 23:00 = 北京时间次日 07:00
+    - cron: '0 23 * * *'
+  workflow_dispatch: # 允许手动触发
+
+jobs:
+  sync_latest_from_upstream:
+    runs-on: ubuntu-latest
+    name: Sync latest commits from upstream repo
+
+    steps:
+      - name: Checkout target repo
+        uses: actions/checkout@v3
+
+      - name: Sync upstream changes
+        uses: aormsby/Fork-Sync-With-Upstream-action@v3.4.3
+        with:
+          # 你的 Fork 仓库要同步的分支，通常是 main
+          target_sync_branch: main
+
+          # 原仓库的所有者/仓库名
+          upstream_sync_repo: linguo2625469/workbuddy2api-panel
+
+          # 原仓库要同步的分支，通常是 main
+          upstream_sync_branch: main
+
+          # 使用默认的 GITHUB_TOKEN 即可
+          target_repo_token: ${{ secrets.GITHUB_TOKEN }}
